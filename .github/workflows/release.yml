@@ -159,14 +159,25 @@ jobs:
         include:
           # macOS builds (Self-hosted M1 Mac)
           - platform: macos
-            arch: arm64
+            arch: universal
             os: [self-hosted, macOS, ARM64]
             build_cmd: "--mac --arm64 --x64"  # M1 can build both architectures
+
+          # Windows builds
+          - platform: windows
+            arch: x64
+            os: windows-latest
+            build_cmd: "--win --x64 nsis portable msi"
+          - platform: windows
+            arch: arm64
+            os: windows-latest
+            build_cmd: "--win --arm64 nsis portable"
+
           # Linux builds
           - platform: linux
             arch: x64
             os: ubuntu-latest
-            build_cmd: "--linux AppImage deb rpm --x64"
+            build_cmd: "--linux AppImage deb rpm snap --x64"
           - platform: linux
             arch: arm64
             os: ubuntu-latest-arm
