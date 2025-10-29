@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.1](https://github.com/getgrowly/s3-browser/compare/v1.1.0...v1.1.1) (2025-10-29)
+
+
+### Bug Fixes
+
+* improve debug output handling in workflow ([0b8b9c4](https://github.com/getgrowly/s3-browser/commit/0b8b9c4d7874dcb6868fc21025f684a0eb8831f6))
+* update ([d08d691](https://github.com/getgrowly/s3-browser/commit/d08d691764d3abfee433c28ce4ac2295e5305544))
+* update ([f4ddcd1](https://github.com/getgrowly/s3-browser/commit/f4ddcd11ed8ed945a2bd2566710d77a66da7544f))
+
 ## [1.0.2](https://github.com/getgrowly/s3-browser/compare/v1.0.1...v1.0.2) (2025-10-29)
 
 
