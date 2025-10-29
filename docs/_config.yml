@@ -1,0 +1,37 @@
+# GitHub Pages Configuration
+title: Growly S3 Browser
+description: A Modern, Multi-Platform Desktop Application for AWS S3 Management
+url: "https://getgrowly.github.io"
+baseurl: "/growly-s3-browser"
+
+# Theme
+theme: jekyll-theme-minimal
+
+# Social
+github_username: getgrowly
+repository: getgrowly/growly-s3-browser
+
+# SEO
+lang: en
+author:
+  name: Growly Team
+  email: open@getgrowly.co
+
+# Analytics (optional - add your Google Analytics ID)
+# google_analytics: UA-XXXXXXXXX-X
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Exclude from processing
+exclude:
+  - screenshots/
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+

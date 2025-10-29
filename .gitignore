@@ -1,0 +1,74 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+.vitest
+*.lcov
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# electron
+/electron/dist/
+/release/
+*.db
+
+# misc
+.DS_Store
+*.pem
+
+# cache files
+.eslintcache
+
+# IDE and editor configurations
+.claude/
+.cursor/
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Temporary documentation files
+# Keep only essential docs: README.md, CONTRIBUTING.md, CHANGELOG.md, and docs/ folder
+/*_SUMMARY.md
+/*_FIX*.md
+/*_FEATURE.md
+/*_GUIDE.md
+/*_IMPLEMENTATION.md
+/*_MIGRATION.md
+/*_SETUP.md
+/*_COMPLETE.md
+/*_PREVIEW.md
+/*_WORKFLOW.md
+/*_TROUBLESHOOTING.md
+/*_UPDATE.md
+/*_IMPROVEMENTS.md
+/*_SKIP_*.md
+/BRANDING_*.md
+/CUSTOM_*.md
+/ICON_*.md
+/IKON_*.md
+/README_*.md
+/README-*.md
+/SETUP-*.md

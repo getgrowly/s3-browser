@@ -1,0 +1,27 @@
+# Temporary documentation files
+# Keep only essential docs: README.md, CONTRIBUTING.md, CHANGELOG.md, and docs/ folder
+/*_SUMMARY.md
+/*_FIX*.md
+/*_FEATURE.md
+/*_GUIDE.md
+/*_IMPLEMENTATION.md
+/*_MIGRATION.md
+/*_SETUP.md
+/*_COMPLETE.md
+/*_PREVIEW.md
+/*_WORKFLOW.md
+/*_TROUBLESHOOTING.md
+/*_UPDATE.md
+/*_IMPROVEMENTS.md
+/*_SKIP_*.md
+/BRANDING_*.md
+/CUSTOM_*.md
+/ICON_*.md
+/IKON_*.md
+/README_*.md
+/README-*.md
+/SETUP-*.md
+
+# IDE and editor configurations
+.claude/
+.cursor/

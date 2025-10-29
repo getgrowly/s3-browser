@@ -1,0 +1,291 @@
+name: CI & Release
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality (lint / typecheck / test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "yarn"
+
+      - run: corepack enable
+
+      # Cache node_modules for faster installs
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: |
+            node_modules
+            .yarn/cache
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: corepack yarn install --frozen-lockfile
+
+      # Cache ESLint for faster linting
+      - name: Cache ESLint
+        uses: actions/cache@v4
+        with:
+          path: .eslintcache
+          key: ${{ runner.os }}-eslint-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          restore-keys: |
+            ${{ runner.os }}-eslint-
+
+      # Cache TypeScript build info
+      - name: Cache TypeScript
+        uses: actions/cache@v4
+        with:
+          path: |
+            **/*.tsbuildinfo
+            tsconfig.tsbuildinfo
+          key: ${{ runner.os }}-typescript-${{ hashFiles('**/tsconfig.json', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-typescript-
+
+      - run: corepack yarn lint
+      - run: corepack yarn check:types
+      - run: corepack yarn test
+
+  release:
+    name: Semantic Release
+    # needs: quality
+    runs-on: ubuntu-latest
+    outputs:
+      published: ${{ steps.semantic.outputs.release_created }}
+      version: ${{ steps.semantic.outputs.major }}.${{ steps.semantic.outputs.minor }}.${{ steps.semantic.outputs.patch }}
+      tag: ${{ steps.semantic.outputs.tag_name }}
+    steps:
+      # Generate token from GitHub App (preferred method)
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Debug Token Generation
+        run: |
+          if [ -n "${{ steps.generate_token.outputs.token }}" ]; then
+            echo "✅ GitHub App token generated successfully"
+            echo "Token length: ${#GITHUB_APP_TOKEN}"
+          else
+            echo "❌ GitHub App token generation failed"
+            echo "Falling back to RELEASE_PLEASE_TOKEN or GITHUB_TOKEN"
+          fi
+        env:
+          GITHUB_APP_TOKEN: ${{ steps.generate_token.outputs.token }}
+
+      - uses: actions/checkout@v4
+        with:
+          # Use GitHub App token (preferred), PAT (fallback), or GITHUB_TOKEN (last resort)
+          token: ${{ steps.generate_token.outputs.token || secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "yarn"
+
+      - run: corepack enable
+
+      # Cache node_modules (reuse from quality job if possible)
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: |
+            node_modules
+            .yarn/cache
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: corepack yarn install --frozen-lockfile
+
+      - name: Debug Token Selection
+        run: |
+          if [ -n "${{ steps.generate_token.outputs.token }}" ]; then
+            echo "Using: GitHub App Token ✅"
+          elif [ -n "${{ secrets.RELEASE_PLEASE_TOKEN }}" ]; then
+            echo "Using: RELEASE_PLEASE_TOKEN (PAT) ⚠️"
+          else
+            echo "Using: GITHUB_TOKEN (may fail with branch protection) ❌"
+          fi
+
+      - id: semantic
+        uses: googleapis/release-please-action@v4
+        with:
+          # Priority: GitHub App token > PAT > GITHUB_TOKEN
+          # GitHub App is the most secure and recommended approach
+          token: ${{ steps.generate_token.outputs.token || secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      - name: Debug Release Please Outputs
+        if: always()
+        run: |
+          echo "release_created=${{ steps.semantic.outputs.release_created }}"
+          echo "tag_name=${{ steps.semantic.outputs.tag_name }}"
+          echo "version=${{ steps.semantic.outputs.major }}.${{ steps.semantic.outputs.minor }}.${{ steps.semantic.outputs.patch }}"
+          echo "pr_number=${{ steps.semantic.outputs.pr }}"
+
+  build-desktop:
+    name: Build Desktop (${{ matrix.platform }} - ${{ matrix.arch }})
+    needs: release
+    if: needs.release.outputs.published == 'true' && needs.release.outputs.tag != ''
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # macOS builds (Self-hosted M1 Mac)
+          - platform: macos
+            arch: arm64
+            os: [self-hosted, macOS, ARM64]
+            build_cmd: "--mac --arm64 --x64"  # M1 can build both architectures
+          # Linux builds
+          - platform: linux
+            arch: x64
+            os: ubuntu-latest
+            build_cmd: "--linux AppImage deb rpm --x64"
+          - platform: linux
+            arch: arm64
+            os: ubuntu-latest-arm
+            build_cmd: "--linux AppImage deb rpm --arm64"
+
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release.outputs.tag }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "yarn"
+
+      - run: corepack enable
+
+      # Cache node_modules with better key
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: |
+            node_modules
+            .yarn/cache
+            electron/node_modules
+          key: ${{ runner.os }}-${{ matrix.arch }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.arch }}-node-modules-
+            ${{ runner.os }}-node-modules-
+
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: corepack yarn install --frozen-lockfile
+
+      # Cache Electron binaries (OS and arch specific)
+      - name: Cache Electron binaries
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-builder
+            ~/Library/Caches/electron
+            ~/Library/Caches/electron-builder
+            %LOCALAPPDATA%\electron\Cache
+            %LOCALAPPDATA%\electron-builder\Cache
+          key: ${{ runner.os }}-${{ matrix.arch }}-electron-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.arch }}-electron-
+            ${{ runner.os }}-electron-
+
+      # Cache Next.js build
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: |
+            .next/cache
+            .next/standalone
+          key: ${{ runner.os }}-${{ matrix.arch }}-nextjs-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('app/**/*.[jt]s', 'app/**/*.[jt]sx', 'components/**/*.[jt]s', 'components/**/*.[jt]sx', 'lib/**/*.[jt]s') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.arch }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
+            ${{ runner.os }}-${{ matrix.arch }}-nextjs-
+
+      # Cache TypeScript compilation
+      - name: Cache TypeScript
+        uses: actions/cache@v4
+        with:
+          path: |
+            **/*.tsbuildinfo
+            electron/dist
+          key: ${{ runner.os }}-${{ matrix.arch }}-typescript-${{ hashFiles('**/tsconfig*.json', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.arch }}-typescript-
+      
+      - run: corepack yarn build
+      - run: npx tsc -p electron/tsconfig.json
+      
+      # Only run type checking on Linux x64 to save time
+      - name: Type Check
+        if: matrix.platform == 'linux' && matrix.arch == 'x64'
+        run: corepack yarn check:types
+      
+      - name: Build Electron App
+        run: corepack yarn electron-builder ${{ matrix.build_cmd }} --publish=always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-release:
+    name: Publish GitHub Release
+    needs: [release, build-desktop]
+    if: needs.release.outputs.published == 'true' && needs.release.outputs.tag != ''
+    runs-on: ubuntu-latest
+    steps:
+      # Generate token from GitHub App
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token || secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Publish Release
+        run: |
+          gh release edit ${{ needs.release.outputs.tag }} --draft=false
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token || secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
