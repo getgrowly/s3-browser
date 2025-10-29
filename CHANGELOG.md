@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/getgrowly/s3-browser/compare/v1.2.0...v1.2.1) (2025-10-29)
+
+
+### Bug Fixes
+
+* correct electron-builder command syntax for Windows builds ([673c492](https://github.com/getgrowly/s3-browser/commit/673c492e521df724af2270eb5e0a6176dda6392c))
+
 ## [1.2.0](https://github.com/getgrowly/s3-browser/compare/v1.1.1...v1.2.0) (2025-10-29)
 
 
