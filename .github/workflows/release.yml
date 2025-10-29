@@ -152,10 +152,12 @@ jobs:
       - name: Debug Release Please Outputs
         if: always()
         run: |
-          echo "release_created=${{ steps.semantic.outputs.release_created }}"
-          echo "tag_name=${{ steps.semantic.outputs.tag_name }}"
-          echo "version=${{ steps.semantic.outputs.major }}.${{ steps.semantic.outputs.minor }}.${{ steps.semantic.outputs.patch }}"
-          echo "pr_number=${{ steps.semantic.outputs.pr }}"
+          echo "release_created=${{ steps.semantic.outputs.release_created || 'false' }}"
+          echo "tag_name=${{ steps.semantic.outputs.tag_name || 'none' }}"
+          echo "major=${{ steps.semantic.outputs.major || '0' }}"
+          echo "minor=${{ steps.semantic.outputs.minor || '0' }}"
+          echo "patch=${{ steps.semantic.outputs.patch || '0' }}"
+          echo "pr_number=${{ steps.semantic.outputs.pr || 'none' }}"
 
   build-desktop:
     name: Build Desktop (${{ matrix.platform }} - ${{ matrix.arch }})
