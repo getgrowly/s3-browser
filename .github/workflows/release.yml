@@ -167,11 +167,11 @@ jobs:
           - platform: windows
             arch: x64
             os: windows-latest
-            build_cmd: "--win --x64 nsis portable msi"
+            build_cmd: "--win nsis portable msi --x64"
           - platform: windows
             arch: arm64
             os: windows-latest
-            build_cmd: "--win --arm64 nsis portable"
+            build_cmd: "--win nsis portable --arm64"
 
           # Linux builds
           - platform: linux
