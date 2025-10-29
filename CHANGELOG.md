@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/getgrowly/s3-browser/compare/v1.1.1...v1.2.0) (2025-10-29)
+
+
+### Features
+
+* add Windows builds and expand platform support ([0da2364](https://github.com/getgrowly/s3-browser/commit/0da23649e0d70329daa868fb8002d8c5451750a4))
+
 ## [1.1.1](https://github.com/getgrowly/s3-browser/compare/v1.1.0...v1.1.1) (2025-10-29)
 
 
