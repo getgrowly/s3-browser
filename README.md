@@ -73,11 +73,23 @@ Visit the [Releases Page](https://github.com/getgrowly/growly-s3-browser/release
 - **DMG Installer**: `Growly-S3-1.0.12-x64.dmg` (Intel)
 - **ZIP Archive**: Also available for both architectures
 
-> **Note for macOS users:** If you see *"Growly S3 is damaged and can't be opened"*, run this command in Terminal:
+> **⚠️ First-Time Setup for macOS:**
+>
+> macOS Gatekeeper may block the app since it's not notarized by Apple.
+>
+> **Easy Fix (Method 1 - Recommended):**
+> 1. Open the DMG file
+> 2. Double-click **"Fix Gatekeeper.command"** script
+> 3. Drag Growly S3 to Applications
+> 4. Done! ✅
+>
+> **Manual Fix (Method 2):**
+> Open Terminal and run:
 > ```bash
 > xattr -cr "/Applications/Growly S3.app"
 > ```
-> This removes the quarantine flag and allows the app to run.
+>
+> This is a one-time setup and only needed because the app is not signed with an Apple Developer certificate.
 
 #### Windows
 - **NSIS Installer**: `Growly-S3-1.0.12-x64.exe` (Recommended)
