@@ -185,10 +185,9 @@
         }
       ],
       "icon": "public/icon.icns",
-      "hardenedRuntime": true,
+      "hardenedRuntime": false,
       "gatekeeperAssess": false,
-      "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.plist",
+      "identity": null,
       "extendInfo": {
         "CFBundleName": "Growly S3",
         "CFBundleDisplayName": "Growly S3"

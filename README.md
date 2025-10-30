@@ -73,6 +73,12 @@ Visit the [Releases Page](https://github.com/getgrowly/growly-s3-browser/release
 - **DMG Installer**: `Growly-S3-1.0.12-x64.dmg` (Intel)
 - **ZIP Archive**: Also available for both architectures
 
+> **Note for macOS users:** If you see *"Growly S3 is damaged and can't be opened"*, run this command in Terminal:
+> ```bash
+> xattr -cr "/Applications/Growly S3.app"
+> ```
+> This removes the quarantine flag and allows the app to run.
+
 #### Windows
 - **NSIS Installer**: `Growly-S3-1.0.12-x64.exe` (Recommended)
 - **MSI Installer**: `Growly-S3-1.0.12-x64.msi`
