@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.4](https://github.com/getgrowly/s3-browser/compare/v1.2.3...v1.2.4) (2025-10-30)
+
+
+### Bug Fixes
+
+* resolve macOS Gatekeeper "damaged" app issue ([90732f2](https://github.com/getgrowly/s3-browser/commit/90732f28146a1c2f6331ebf39c00c9c8055af00c))
+
+
+### Performance Improvements
+
+* optimize build size by using Next.js standalone output ([2d3528c](https://github.com/getgrowly/s3-browser/commit/2d3528c5ba3fc46abd5117483505842d4cb91276))
+
 ## [1.2.3](https://github.com/getgrowly/s3-browser/compare/v1.2.2...v1.2.3) (2025-10-30)
 
 
