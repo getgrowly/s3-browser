@@ -37,30 +37,24 @@ async function startNextServer(): Promise<void> {
       ? path.join(process.resourcesPath, "app.asar.unpacked")
       : path.join(__dirname, "..", "..")
 
-    const nextBin = path.join(appRoot, "node_modules", ".bin", "next")
-    const nodeNextBin = path.join(appRoot, "node_modules", "next", "dist", "bin", "next")
+    // Use standalone server for optimized builds
+    const standaloneServer = path.join(appRoot, ".next", "standalone", "server.js")
 
     log.info("App root:", appRoot)
-    log.info("Looking for Next.js binary...")
+    log.info("Standalone server path:", standaloneServer)
 
-    // Determine which binary to use
-    let nextCommand: string
-    if (process.platform === "win32") {
-      nextCommand = fs.existsSync(`${nextBin}.cmd`) ? `${nextBin}.cmd` : nodeNextBin
-    } else {
-      nextCommand = fs.existsSync(nextBin) ? nextBin : nodeNextBin
+    if (!fs.existsSync(standaloneServer)) {
+      log.error("Standalone server not found at:", standaloneServer)
+      reject(new Error("Next.js standalone server not found"))
+      return
     }
 
-    log.info("Using Next.js binary:", nextCommand)
-
-    // Start Next.js server using `next start`
+    // Start Next.js standalone server
     nextServer = spawn(
-      process.platform === "win32" ? nextCommand : "node",
-      process.platform === "win32"
-        ? ["start", "-p", NEXT_SERVER_PORT.toString()]
-        : [nextCommand, "start", "-p", NEXT_SERVER_PORT.toString()],
+      "node",
+      [standaloneServer],
       {
-        cwd: appRoot,
+        cwd: path.join(appRoot, ".next", "standalone"),
         env: {
           ...process.env,
           PORT: NEXT_SERVER_PORT.toString(),
