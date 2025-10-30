@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/getgrowly/s3-browser/compare/v1.2.6...v1.3.0) (2025-10-30)
+
+
+### Features
+
+* add Apple notarization support (inspired by electron-react-boilerplate) ([73e388c](https://github.com/getgrowly/s3-browser/commit/73e388c85fb4498ed50d58effb52f2c26933f6a7))
+* add one-click Gatekeeper fix script for macOS ([05f44b2](https://github.com/getgrowly/s3-browser/commit/05f44b215360955809870c2d602f6aa8e0dfc778))
+
 ## [1.2.6](https://github.com/getgrowly/s3-browser/compare/v1.2.5...v1.2.6) (2025-10-30)
 
 
