@@ -71,6 +71,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.0.0",
     "@commitlint/config-conventional": "^19.0.0",
+    "@electron/notarize": "^2.3.2",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.38.0",
     "@semantic-release/changelog": "^6.0.3",
@@ -176,9 +177,12 @@
         }
       ],
       "icon": "public/icon.icns",
-      "hardenedRuntime": false,
+      "hardenedRuntime": true,
       "gatekeeperAssess": false,
-      "identity": "-",
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "identity": null,
+      "afterSign": "scripts/notarize.js",
       "extendInfo": {
         "CFBundleName": "Growly S3",
         "CFBundleDisplayName": "Growly S3"
