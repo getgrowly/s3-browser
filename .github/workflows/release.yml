@@ -160,7 +160,7 @@ jobs:
           # macOS builds (Self-hosted M1 Mac)
           - platform: macos
             arch: universal
-            os: [self-hosted, macOS, ARM64]
+            os: [macOS, ARM64]
             build_cmd: "--mac --arm64 --x64"  # M1 can build both architectures
 
           # Windows builds
