@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.5](https://github.com/getgrowly/s3-browser/compare/v1.2.4...v1.2.5) (2025-10-30)
+
+
+### Bug Fixes
+
+* explicitly disable macOS code signing in workflow ([0f30c3c](https://github.com/getgrowly/s3-browser/commit/0f30c3cc820f2a7f42ce973940e5ad76927aec62))
+
 ## [1.2.4](https://github.com/getgrowly/s3-browser/compare/v1.2.3...v1.2.4) (2025-10-30)
 
 
