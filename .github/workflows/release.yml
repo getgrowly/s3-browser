@@ -265,10 +265,11 @@ jobs:
       
       - name: Build Electron App (macOS)
         if: matrix.platform == 'macos'
-        run: corepack yarn electron-builder ${{ matrix.build_cmd }} --publish=always --config.mac.identity=null
+        run: corepack yarn electron-builder ${{ matrix.build_cmd }} --publish=always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
 
       - name: Build Electron App (Windows/Linux)
         if: matrix.platform != 'macos'

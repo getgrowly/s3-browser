@@ -178,7 +178,7 @@
       "icon": "public/icon.icns",
       "hardenedRuntime": false,
       "gatekeeperAssess": false,
-      "identity": null,
+      "identity": "-",
       "extendInfo": {
         "CFBundleName": "Growly S3",
         "CFBundleDisplayName": "Growly S3"
