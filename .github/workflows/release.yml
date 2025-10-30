@@ -264,7 +264,7 @@ jobs:
         run: corepack yarn check:types
       
       - name: Build Electron App
-        run: corepack yarn electron-builder ${{ matrix.build_cmd }} --publish=always
+        run: corepack yarn electron-builder ${{ matrix.build_cmd }} --publish=always --config.mac.identity=null
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
