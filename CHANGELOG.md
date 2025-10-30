@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/getgrowly/s3-browser/compare/v1.2.2...v1.2.3) (2025-10-30)
+
+
+### Bug Fixes
+
+* update ([85c1b8b](https://github.com/getgrowly/s3-browser/commit/85c1b8bcc57db204ec17583066dfb8b4c1b74214))
+
 ## [1.2.2](https://github.com/getgrowly/s3-browser/compare/v1.2.1...v1.2.2) (2025-10-30)
 
 
