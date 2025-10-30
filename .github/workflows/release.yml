@@ -160,28 +160,28 @@ jobs:
           # macOS builds (Self-hosted M1 Mac)
           - platform: macos
             arch: universal
-            os: [macOS, ARM64]
+            os: macos-latest
             build_cmd: "--mac --arm64 --x64"  # M1 can build both architectures
 
           # Windows builds
-          - platform: windows
-            arch: x64
-            os: windows-latest
-            build_cmd: "--win nsis portable msi --x64"
-          - platform: windows
-            arch: arm64
-            os: windows-latest
-            build_cmd: "--win nsis portable --arm64"
+          # - platform: windows
+          #   arch: x64
+          #   os: windows-latest
+          #   build_cmd: "--win nsis portable msi --x64"
+          # - platform: windows
+          #   arch: arm64
+          #   os: windows-latest
+          #   build_cmd: "--win nsis portable --arm64"
 
-          # Linux builds
-          - platform: linux
-            arch: x64
-            os: ubuntu-latest
-            build_cmd: "--linux AppImage deb rpm snap --x64"
-          - platform: linux
-            arch: arm64
-            os: ubuntu-latest-arm
-            build_cmd: "--linux AppImage deb rpm --arm64"
+          # # Linux builds
+          # - platform: linux
+          #   arch: x64
+          #   os: ubuntu-latest
+          #   build_cmd: "--linux AppImage deb rpm snap --x64"
+          # - platform: linux
+          #   arch: arm64
+          #   os: ubuntu-latest-arm
+          #   build_cmd: "--linux AppImage deb rpm --arm64"
 
     runs-on: ${{ matrix.os }}
     continue-on-error: true
