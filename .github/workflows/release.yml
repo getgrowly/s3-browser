@@ -263,8 +263,16 @@ jobs:
         if: matrix.platform == 'linux' && matrix.arch == 'x64'
         run: corepack yarn check:types
       
-      - name: Build Electron App
+      - name: Build Electron App (macOS)
+        if: matrix.platform == 'macos'
         run: corepack yarn electron-builder ${{ matrix.build_cmd }} --publish=always --config.mac.identity=null
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Electron App (Windows/Linux)
+        if: matrix.platform != 'macos'
+        run: corepack yarn electron-builder ${{ matrix.build_cmd }} --publish=always
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
