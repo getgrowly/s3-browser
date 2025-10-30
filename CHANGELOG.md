@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.6](https://github.com/getgrowly/s3-browser/compare/v1.2.5...v1.2.6) (2025-10-30)
+
+
+### Bug Fixes
+
+* apply macOS identity=null only to macOS builds ([1168322](https://github.com/getgrowly/s3-browser/commit/1168322e8c8e38bb9c5d263db37babe3494be4cb))
+* use proper ad-hoc signing for macOS per electron-builder docs ([192a210](https://github.com/getgrowly/s3-browser/commit/192a21027c2ce513f39b6bb5676bfc84ab687c31))
+
 ## [1.2.5](https://github.com/getgrowly/s3-browser/compare/v1.2.4...v1.2.5) (2025-10-30)
 
 
